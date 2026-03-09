@@ -160,7 +160,6 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Sticky Header -->
     <header class="fixed top-0 w-full z-50 glass-header h-20 flex items-center justify-between px-4 lg:px-8 transition-all duration-300" id="main-header">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
@@ -175,7 +174,6 @@
             </div>
         </div>
 
-        <!-- Search & Filter Container -->
         <div class="hidden md:flex items-center gap-4 flex-1 justify-end max-w-2xl">
             <div class="relative group w-full max-w-md">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -185,7 +183,7 @@
                 </div>
                 <input type="text" id="search-input" 
                     class="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-full leading-5 bg-slate-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:bg-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm transition-all" 
-                    placeholder="Search 150+ games...">
+                    placeholder="Search 149 games...">
             </div>
             
             <select id="category-filter" class="bg-slate-800/50 border border-gray-700 text-gray-300 text-sm rounded-full focus:ring-cyan-500 focus:border-cyan-500 block p-2.5 px-4 outline-none cursor-pointer hover:bg-slate-800 transition-colors">
@@ -201,23 +199,26 @@
                 <option value="Survival">Survival</option>
                 <option value="Puzzle">Puzzle</option>
             </select>
+
+            <a href="contact.html" class="flex items-center gap-2 px-5 py-2.5 bg-cyan-500/10 border border-cyan-500/50 text-cyan-400 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-all shadow-lg shadow-cyan-500/10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Support
+            </a>
         </div>
         
-        <!-- Mobile Menu Button (Simplified for this demo) -->
         <button class="md:hidden text-gray-300 hover:text-white">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
     </header>
 
-    <!-- Mobile Search (Visible only on small screens) -->
     <div class="md:hidden mt-24 px-4 mb-4">
         <input type="text" id="mobile-search" class="w-full bg-slate-800/80 border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-500 outline-none" placeholder="Search games...">
     </div>
 
-    <!-- Main Content -->
     <main class="flex-grow container mx-auto px-4 pt-24 pb-12">
         
-        <!-- Hero Stats -->
         <div class="mb-10 flex flex-col md:flex-row justify-between items-end border-b border-gray-800 pb-6">
             <div>
                 <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">Explore The <span class="text-cyan-400">Legends</span></h2>
@@ -229,12 +230,9 @@
             </div>
         </div>
 
-        <!-- Game Grid -->
         <div id="game-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-            <!-- Cards injected via JS -->
-        </div>
+            </div>
 
-        <!-- No Results State -->
         <div id="no-results" class="hidden flex-col items-center justify-center py-20 text-center">
             <div class="text-6xl mb-4">👾</div>
             <h3 class="text-2xl font-bold text-white mb-2">Game Not Found</h3>
@@ -243,7 +241,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="border-t border-gray-800 bg-[#020617] py-8 mt-auto">
         <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div class="mb-4 md:mb-0">
@@ -253,32 +250,26 @@
             <div class="flex gap-6 text-sm text-gray-400">
                 <a href="#" class="hover:text-cyan-400 transition-colors">Privacy</a>
                 <a href="#" class="hover:text-cyan-400 transition-colors">Terms</a>
-                <a href="#" class="hover:text-cyan-400 transition-colors">Support</a>
+                <a href="contact.html" class="hover:text-cyan-400 transition-colors">Support</a>
             </div>
         </div>
     </footer>
 
-    <!-- Game Details Modal -->
     <div id="game-modal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-        <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
         
-        <!-- Modal Content -->
         <div class="modal-content relative w-full max-w-5xl bg-[#0f172a] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] border border-gray-700">
             
-            <!-- Close Button -->
             <button onclick="closeModal()" class="absolute top-4 right-4 z-20 p-2 bg-black/50 rounded-full text-white hover:bg-red-500/80 transition-colors backdrop-blur-md">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
-            <!-- Left: Media -->
             <div class="w-full md:w-3/5 bg-black relative group">
                 <div class="aspect-video w-full h-full">
                     <iframe id="modal-video" class="w-full h-full" src="" title="Game Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
             </div>
 
-            <!-- Right: Info -->
             <div class="w-full md:w-2/5 p-6 md:p-8 flex flex-col overflow-y-auto bg-gradient-to-b from-[#0f172a] to-[#020617]">
                 <div class="mb-auto">
                     <div class="flex items-center gap-2 mb-2">
@@ -290,8 +281,7 @@
                     <h2 id="modal-title" class="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">Game Title</h2>
                     
                     <div class="prose prose-invert prose-sm mb-6 text-gray-300 leading-relaxed" id="modal-desc">
-                        <!-- Description injected here -->
-                    </div>
+                        </div>
                     
                     <div class="grid grid-cols-2 gap-4 mb-8">
                         <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700">
