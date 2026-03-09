@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Gaming Vault | Next-Gen Library</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        vault: {
+                            bg: '#0f172a', // Deep Slate
+                            card: 'rgba(30, 41, 59, 0.4)', // Glass base
+                            accent: '#00f2ff', // Neon Cyan
+                            accentHover: '#00c2cc',
+                            purple: '#bd00ff',
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(0, 242, 255, 0.2)' },
+                            '50%': { boxShadow: '0 0 25px rgba(0, 242, 255, 0.6)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2ff; 
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(0, 242, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.15), inset 0 0 10px rgba(0, 242, 255, 0.05);
+        }
+
+        /* Glow Border Animation */
+        .glow-border {
+            position: relative;
+            overflow: hidden;
+        }
+        .glow-border::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        .glass-card:hover .glow-border::before {
+            left: 100%;
+            transition: 0.5s ease-in-out;
+        }
+
+        /* Staggered Reveal Animation Classes */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal Transitions */
+        .modal-backdrop {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+        
+        /* Hide scrollbar for category list on mobile */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Neon Text Effect */
+        .neon-text {
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5), 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-vault-bg text-slate-200 font-sans min-h-screen overflow-x-hidden selection:bg-vault-accent selection:text-vault-bg">
+
+    <!-- Background Ambient Effects -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-vault-purple/20 rounded-full blur-[120px] animate-float"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-vault-accent/10 rounded-full blur-[120px] animate-float" style="animation-delay: 2s;"></div>
+        <div class="absolute top-[40%] left-[60%] w-[300px] h-[300px] bg-blue-600/10 rounded-full blur-[100px] animate-float" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Sticky Header -->
+    <header class="fixed top-0 w-full z-50 glass-panel border-b border-white/5 transition-all duration-300" id="main-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between h-auto md:h-20 py-4 md:py-0 gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 group cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-vault-accent to-blue-600 flex items-center justify-center shadow-lg shadow-vault-accent/20 group-hover:shadow-vault-accent/40 transition-all">
+                        <i class="fa-solid fa-gamepad text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-white">GAMING <span class="text-vault-accent">VAULT</span></h1>
+                        <p class="text-[10px] text-slate-400 tracking-widest uppercase">Next-Gen Library</p>
+                    </div>
+                </div>
+
+                <!-- Search & Filter Container -->
+                <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+                    
+                    <!-- Search Bar -->
+                    <div class="relative group w-full md:w-80">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-search text-slate-500 group-focus-within:text-vault-accent transition-colors"></i>
+                        </div>
+                        <input type="text" id="search-input" 
+                            class="block w-full pl-10 pr-3 py-2 border border-slate-700 rounded-full leading-5 bg-slate-900/50 text-slate-300 placeholder-slate-500 focus:outline-none focus:bg-slate-900 focus:border-vault-accent focus:ring-1 focus:ring-vault-accent sm:text-sm transition-all duration-300" 
+                            placeholder="Fuzzy search games...">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <span class="text-xs text-slate-600 border border-slate-700 rounded px-1.5 py-0.5 hidden md:block">CTRL K</span>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="flex gap-2 overflow-x-auto w-full md:w-auto no-scrollbar pb-1 md:pb-0" id="category-filters">
+                        <!-- Buttons injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        
+        <!-- Hero Section -->
+        <div class="mb-12 text-center reveal-on-scroll">
+            <h2 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-500 mb-4 tracking-tight">
+                Discover The <span class="neon-text text-vault-accent">Future</span>
+            </h2>
+            <p class="text-slate-400 max-w-2xl mx-auto text-lg">
+                Explore our curated collection of 503 high-fidelity gaming experiences. 
+                Immersive worlds await your command.
+            </p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="flex justify-between items-center mb-6 border-b border-white/5 pb-4 reveal-on-scroll">
+            <p class="text-slate-400 text-sm">Showing <span id="game-count" class="text-vault-accent font-bold">0</span> titles</p>
+            <div class="flex gap-2 text-xs text-slate-500">
+                <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-green-500"></div> Online</span>
+                <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-vault-accent"></div> Updated</span>
+            </div>
+        </div>
+
+        <!-- Game Grid -->
+        <div id="game-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Cards injected by JS -->
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="empty-state" class="hidden text-center py-20">
+            <div class="inline-block p-6 rounded-full bg-slate-800/50 mb-4">
+                <i class="fa-solid fa-ghost text-4xl text-slate-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">No games found</h3>
+            <p class="text-slate-400">Try adjusting your search or filters.</p>
+            <button onclick="resetFilters()" class="mt-4 px-6 py-2 bg-vault-accent/10 text-vault-accent border border-vault-accent/50 rounded-full hover:bg-vault-accent hover:text-black transition-all">
+                Reset Filters
+            </button>
+        </div>
+    </main>
+
+    <!-- Modal Overlay -->
+    <div id="game-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm modal-backdrop opacity-0" id="modal-backdrop"></div>
+
+        <!-- Modal Panel -->
+        <div class="relative z-10 h-full w-full flex items-center justify-center p-4 pointer-events-none">
+            <div class="glass-panel w-full max-w-5xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row transform scale-95 opacity-0 modal-content pointer-events-auto border border-white/10" id="modal-panel">
+                
+                <!-- Close Button -->
+                <button onclick="closeModal()" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/50 text-white hover:bg-vault-accent hover:text-black transition-all border border-white/10">
+                    <i class="fa-solid fa-times text-xl w-6 h-6 flex items-center justify-center"></i>
+                </button>
+
+                <!-- Left: Media -->
+                <div class="w-full md:w-3/5 bg-black relative group h-64 md:h-auto">
+                    <div id="modal-video-container" class="w-full h-full">
+                        <!-- Iframe injected here -->
+                    </div>
+                    <!-- Overlay Gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60 pointer-events-none"></div>
+                </div>
+
+                <!-- Right: Content -->
+                <div class="w-full md:w-2/5 p-6 md:p-8 flex flex-col overflow-y-auto bg-slate-900/50">
+                    <div class="mb-auto">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span id="modal-category" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-vault-accent/10 text-vault-accent border border-vault-accent/20">
+                                Action
+                            </span>
+                            <div class="flex text-yellow-400 text-xs gap-0.5">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                            </div>
+                        </div>
+                        
+                        <h2 id="modal-title" class="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">Game Title</h2>
+                        
+                        <div class="prose prose-invert prose-sm max-w-none mb-6 text-slate-300" id="modal-description">
+                            <!-- Description injected here -->
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="p-3 rounded-lg bg-white/5 border border-white/5">
+                                <p class="text-xs text-slate-500 uppercase">Release Date</p>
+                                <p class="text-sm font-semibold text-white" id="modal-date">2023</p>
+                            </div>
+                            <div class="p-3 rounded-lg bg-white/5 border border-white/5">
+                                <p class="text-xs text-slate-500 uppercase">Developer</p>
+                                <p class="text-sm font-semibold text-white" id="modal-dev">Studio Name</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-white/10">
+                        <button class="w-full py-4 bg-gradient-to-r from-vault-accent to-blue-600 rounded-xl font-bold text-white shadow-lg shadow-vault-accent/25 hover:shadow-vault-accent/50 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2 group animate-pulse-glow">
+                            <i class="fa-solid fa-download group-hover:animate-bounce"></i>
+                            <span>Download Now</span>
+                        </button>
+                        <p class="text-center text-xs text-slate-500 mt-3">Instant delivery via secure CDN.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Generation ---
+        const categories = ['Action', 'RPG', 'Strategy', 'FPS', 'Adventure', 'Racing', 'Puzzle', 'Horror', 'Sports', 'Indie'];
+        const developers = ['Nebula Studios', 'CyberForge', 'Quantum Arts', 'Void Interactive', 'Stellar Bit', 'Echo Games', 'Nexus Core'];
+        
+        // Helper to generate deterministic random numbers based on seed (index)
+        function seededRandom(seed) {
+            let x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        }
+
+        // Generate 503 Games
+        const games = Array.from({ length: 503 }, (_, i) => {
+            const id = i + 1;
+            const category = categories[Math.floor(seededRandom(id) * categories.length)];
+            const dev = developers[Math.floor(seededRandom(id + 100) * developers.length)];
+            const year = 2015 + Math.floor(seededRandom(id + 200) * 9);
+            
+            // Create varied titles
+            const prefixes = ['Cyber', 'Neon', 'Dark', 'Star', 'Void', 'Quantum', 'Hyper', 'Mega', 'Ultra', 'Last'];
+            const suffixes = ['Nexus', 'Protocol', 'Chronicles', 'Reborn', 'Legends', 'Shift', 'Runner', 'Core', 'Frontier', 'Dreams'];
+            const title = `${prefixes[Math.floor(seededRandom(id) * prefixes.length)]} ${suffixes[Math.floor(seededRandom(id + 50) * suffixes.length)]} ${id > 100 ? id : ''}`.trim();
+
+            // Description generator
+            const desc = `**Experience the ultimate ${category.toLowerCase()} adventure.**\n\nIn ${title}, you will traverse vast digital landscapes, engage in intense tactical combat, and uncover a story that challenges the fabric of reality. Developed by the renowned ${dev}, this title pushes the boundaries of modern hardware with ray-traced visuals and a dynamic soundtrack.\n\n### Key Features:\n*   Immersive Open World\n*   Advanced Physics Engine\n*   Multiplayer Co-op Mode\n*   4K Resolution Support`;
+
+            return {
+                id,
+                title,
+                category,
+                developer: dev,
+                year,
+                description: desc,
+                // Using specific video IDs for variety
+                videoId: ['dQw4w9WgXcQ', 'M7lc1UVf-VE', 'L_jWHffIx5E', '9bZkp7q19f0', 'kJQP7kiw5Fk'][i % 5], 
+                image: `https://picsum.photos/seed/${id + 100}/400/300` // Using picsum for reliable game-like abstract art
+            };
+        });
+
+        // --- State Management ---
+        let currentCategory = 'All';
+        let searchQuery = '';
+
+        // --- DOM Elements ---
+        const gridEl = document.getElementById('game-grid');
+        const countEl = document.getElementById('game-count');
+        const emptyStateEl = document.getElementById('empty-state');
+        const filterContainerEl = document.getElementById('category-filters');
+        const searchInput = document.getElementById('search-input');
+        const modal = document.getElementById('game-modal');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalPanel = document.getElementById('modal-panel');
+
+        // --- Initialization ---
+        function init() {
+            renderFilters();
+            filterAndRenderGames();
+            setupIntersectionObserver();
+            setupKeyboardShortcuts();
+        }
+
+        // --- Rendering Logic ---
+
+        function renderFilters() {
+            const allBtn = createFilterBtn('All', true);
+            filterContainerEl.appendChild(allBtn);
+
+            categories.forEach(cat => {
+                filterContainerEl.appendChild(createFilterBtn(cat, false));
+            });
+        }
+
+        function createFilterBtn(category, isActive) {
+            const btn = document.createElement('button');
+            btn.className = `px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 border ${
+                isActive 
+                ? 'bg-vault-accent text-black border-vault-accent shadow-[0_0_15px_rgba(0,242,255,0.4)]' 
+                : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:border-slate-500 hover:text-white'
+            }`;
+            btn.textContent = category;
+            btn.onclick = () => setCategory(category, btn);
+            return btn;
+        }
+
+        function setCategory(category, btnElement) {
+            currentCategory = category;
+            
+            // Update UI
+            Array.from(filterContainerEl.children).forEach(child => {
+                child.className = 'px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 border bg-slate-800/50 text-slate-400 border-slate-700 hover:border-slate-500 hover:text-white';
+            });
+            btnElement.className = 'px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 border bg-vault-accent text-black border-vault-accent shadow-[0_0_15px_rgba(0,242,255,0.4)]';
+            
+            filterAndRenderGames();
+        }
+
+        // Fuzzy Search Logic
+        function fuzzyMatch(str, pattern) {
+            pattern = pattern.split("").reduce((a, b) => a + ".*" + b);
+            return (new RegExp(pattern)).test(str.toLowerCase());
+        }
+
+        function filterAndRenderGames() {
+            gridEl.innerHTML = '';
+            
+            const filtered = games.filter(game => {
+                const matchesCategory = currentCategory === 'All' || game.category === currentCategory;
+                const matchesSearch = searchQuery === '' || 
+                                      fuzzyMatch(game.title, searchQuery.toLowerCase()) || 
+                                      game.category.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            countEl.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                emptyStateEl.classList.remove('hidden');
+            } else {
+                emptyStateEl.classList.add('hidden');
+                filtered.forEach((game, index) => {
+                    // Stagger delay based on index for initial load animation
+                    const card = createGameCard(game, index);
+                    gridEl.appendChild(card);
+                });
+                // Re-observe new elements
+                setupIntersectionObserver();
+            }
+        }
+
+        function createGameCard(game, index) {
+            const div = document.createElement('div');
+            div.className = 'reveal-on-scroll group relative h-80 rounded-2xl glass-card cursor-pointer overflow-hidden';
+            // Stagger animation delay inline style for initial load
+            div.style.transitionDelay = `${(index % 10) * 50}ms`; 
+
+            div.innerHTML = `
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-40" 
+                     style="background-image: url('${game.image}');">
+                </div>
+                
+                <!-- Glow Border Effect -->
+                <div class="absolute inset-0 glow-border pointer-events-none"></div>
+                
+                <!-- Gradient Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-90"></div>
+
+                <!-- Content -->
+                <div class="absolute inset-0 p-6 flex flex-col justify-end transform transition-transform duration-300 group-hover:translate-y-[-4px]">
+                    <div class="mb-auto flex justify-between items-start">
+                        <span class="px-2 py-1 bg-vault-accent/20 backdrop-blur-md border border-vault-accent/30 text-vault-accent text-[10px] font-bold uppercase tracking-wider rounded">
+                            ${game.category}
+                        </span>
+                        <span class="text-xs text-slate-400 font-mono bg-black/30 px-2 py-1 rounded">${game.year}</span>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-1 leading-tight group-hover:text-vault-accent transition-colors">${game.title}</h3>
+                        <p class="text-sm text-slate-400 mb-4">${game.developer}</p>
+                        
+                        <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
+                            <button class="flex-1 py-2 bg-white text-slate-900 rounded-lg text-xs font-bold uppercase tracking-wide hover:bg-vault-accent transition-colors">
+                                View Details
+                            </button>
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-vault-accent hover:text-black transition-colors">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            div.onclick = () => openModal(game);
+            return div;
+        }
+
+        function resetFilters() {
+            searchQuery = '';
+            searchInput.value = '';
+            setCategory('All', filterContainerEl.children[0]);
+        }
+
+        // --- Intersection Observer for Scroll Animations ---
+        let observer;
+        function setupIntersectionObserver() {
+            if (observer) observer.disconnect();
+
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // Only animate once
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // --- Modal Logic ---
+        function openModal(game) {
+            // Populate Data
+            document.getElementById('modal-title').textContent = game.title;
+            document.getElementById('modal-category').textContent = game.category;
+            document.getElementById('modal-date').textContent = game.year;
+            document.getElementById('modal-dev').textContent = game.developer;
+            
+            // Markdown-like parsing (simple version)
+            const htmlDesc = game.description
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>')
+                .replace(/\* (.*?)/g, '<li class="ml-4 list-disc">$1</li>');
+            document.getElementById('modal-description').innerHTML = `<p>${htmlDesc}</p>`;
+
+            // Video
+            const videoContainer = document.getElementById('modal-video-container');
+            videoContainer.innerHTML = `
+                <iframe class="w-full h-full" src="https://www.youtube.com/embed/${game.videoId}?autoplay=1&mute=1&controls=1" 
+                title="YouTube video player" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+            `;
+
+            // Show Modal
+            modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                modalBackdrop.classList.remove('opacity-0');
+                modalPanel.classList.remove('opacity-0', 'scale-95');
+                modalPanel.classList.add('scale-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeModal() {
+            modalBackdrop.classList.add('opacity-0');
+            modalPanel.classList.remove('scale-100');
+            modalPanel.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('modal-video-container').innerHTML = ''; // Stop video
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Close on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal || e.target.closest('#modal-backdrop')) {
+                closeModal();
+            }
+        });
+
+        // --- Event Listeners ---
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            filterAndRenderGames();
+        });
+
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + K to focus search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+                // Escape to close modal
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Run
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
