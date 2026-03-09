@@ -3,587 +3,643 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Gaming Vault | Next-Gen Library</title>
-    
-    <!-- Tailwind CSS -->
+    <title>Ultimate Gaming Vault | Yasem Co.</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        vault: {
-                            bg: '#0f172a', // Deep Slate
-                            card: 'rgba(30, 41, 59, 0.4)', // Glass base
-                            accent: '#00f2ff', // Neon Cyan
-                            accentHover: '#00c2cc',
-                            purple: '#bd00ff',
-                        }
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 15px rgba(0, 242, 255, 0.2)' },
-                            '50%': { boxShadow: '0 0 25px rgba(0, 242, 255, 0.6)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
+        :root {
+            --neon-cyan: #00f2ff;
+            --neon-pink: #ff00ff;
+            --neon-purple: #bd00ff;
+            --bg-dark: #050b14;
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 242, 255, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(189, 0, 255, 0.05), transparent 25%);
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0f172a; 
+            background: #0f172a;
         }
         ::-webkit-scrollbar-thumb {
-            background: #334155; 
+            background: #334155;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #00f2ff; 
+            background: var(--neon-cyan);
         }
 
         /* Glassmorphism Utilities */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-header {
+            background: rgba(5, 11, 20, 0.85);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1);
         }
 
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .glass-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: rgba(0, 242, 255, 0.3);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.15), inset 0 0 10px rgba(0, 242, 255, 0.05);
-        }
-
-        /* Glow Border Animation */
-        .glow-border {
+        /* Card Animations */
+        .game-card {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
             position: relative;
             overflow: hidden;
         }
-        .glow-border::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-        .glass-card:hover .glow-border::before {
-            left: 100%;
-            transition: 0.5s ease-in-out;
-        }
 
-        /* Staggered Reveal Animation Classes */
-        .reveal-on-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-        .reveal-on-scroll.is-visible {
+        .game-card.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Modal Transitions */
-        .modal-backdrop {
+        /* Glow Border Effect */
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 0.75rem;
+            padding: 1px;
+            background: linear-gradient(45deg, transparent, var(--neon-cyan), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
             transition: opacity 0.3s ease;
-        }
-        .modal-content {
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
-        }
-        
-        /* Hide scrollbar for category list on mobile */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+            pointer-events: none;
+            z-index: 10;
         }
 
-        /* Neon Text Effect */
-        .neon-text {
-            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5), 0 0 20px rgba(0, 242, 255, 0.3);
+        .game-card:hover::before {
+            opacity: 1;
+            animation: borderRotate 3s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+        }
+
+        .card-image {
+            transition: transform 0.5s ease;
+        }
+        .game-card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        /* Modal Animation */
+        .modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        /* Button Pulse */
+        .btn-pulse {
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 242, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0); }
+        }
+
+        /* Loader */
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--neon-cyan);
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Text Gradient */
+        .text-gradient {
+            background: linear-gradient(to right, #fff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
-<body class="bg-vault-bg text-slate-200 font-sans min-h-screen overflow-x-hidden selection:bg-vault-accent selection:text-vault-bg">
-
-    <!-- Background Ambient Effects -->
-    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-vault-purple/20 rounded-full blur-[120px] animate-float"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-vault-accent/10 rounded-full blur-[120px] animate-float" style="animation-delay: 2s;"></div>
-        <div class="absolute top-[40%] left-[60%] w-[300px] h-[300px] bg-blue-600/10 rounded-full blur-[100px] animate-float" style="animation-delay: 4s;"></div>
-    </div>
+<body class="min-h-screen flex flex-col">
 
     <!-- Sticky Header -->
-    <header class="fixed top-0 w-full z-50 glass-panel border-b border-white/5 transition-all duration-300" id="main-header">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between h-auto md:h-20 py-4 md:py-0 gap-4">
-                
-                <!-- Logo -->
-                <div class="flex items-center gap-3 group cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-vault-accent to-blue-600 flex items-center justify-center shadow-lg shadow-vault-accent/20 group-hover:shadow-vault-accent/40 transition-all">
-                        <i class="fa-solid fa-gamepad text-white text-xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold tracking-tight text-white">GAMING <span class="text-vault-accent">VAULT</span></h1>
-                        <p class="text-[10px] text-slate-400 tracking-widest uppercase">Next-Gen Library</p>
-                    </div>
-                </div>
-
-                <!-- Search & Filter Container -->
-                <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-                    
-                    <!-- Search Bar -->
-                    <div class="relative group w-full md:w-80">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-search text-slate-500 group-focus-within:text-vault-accent transition-colors"></i>
-                        </div>
-                        <input type="text" id="search-input" 
-                            class="block w-full pl-10 pr-3 py-2 border border-slate-700 rounded-full leading-5 bg-slate-900/50 text-slate-300 placeholder-slate-500 focus:outline-none focus:bg-slate-900 focus:border-vault-accent focus:ring-1 focus:ring-vault-accent sm:text-sm transition-all duration-300" 
-                            placeholder="Fuzzy search games...">
-                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                            <span class="text-xs text-slate-600 border border-slate-700 rounded px-1.5 py-0.5 hidden md:block">CTRL K</span>
-                        </div>
-                    </div>
-
-                    <!-- Category Filter -->
-                    <div class="flex gap-2 overflow-x-auto w-full md:w-auto no-scrollbar pb-1 md:pb-0" id="category-filters">
-                        <!-- Buttons injected by JS -->
-                    </div>
-                </div>
+    <header class="fixed top-0 w-full z-50 glass-header h-20 flex items-center justify-between px-4 lg:px-8 transition-all duration-300" id="main-header">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-white">ULTIMATE <span class="text-cyan-400">VAULT</span></h1>
+                <p class="text-[10px] text-gray-400 tracking-widest uppercase">Made by Yasem Coopration</p>
             </div>
         </div>
+
+        <!-- Search & Filter Container -->
+        <div class="hidden md:flex items-center gap-4 flex-1 justify-end max-w-2xl">
+            <div class="relative group w-full max-w-md">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400 group-focus-within:text-cyan-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input type="text" id="search-input" 
+                    class="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-full leading-5 bg-slate-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:bg-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm transition-all" 
+                    placeholder="Search 150+ games...">
+            </div>
+            
+            <select id="category-filter" class="bg-slate-800/50 border border-gray-700 text-gray-300 text-sm rounded-full focus:ring-cyan-500 focus:border-cyan-500 block p-2.5 px-4 outline-none cursor-pointer hover:bg-slate-800 transition-colors">
+                <option value="All">All Genres</option>
+                <option value="Action">Action</option>
+                <option value="RPG">RPG</option>
+                <option value="Adventure">Adventure</option>
+                <option value="Shooter">Shooter</option>
+                <option value="Strategy">Strategy</option>
+                <option value="Platformer">Platformer</option>
+                <option value="Fighting">Fighting</option>
+                <option value="Racing">Racing</option>
+                <option value="Survival">Survival</option>
+                <option value="Puzzle">Puzzle</option>
+            </select>
+        </div>
+        
+        <!-- Mobile Menu Button (Simplified for this demo) -->
+        <button class="md:hidden text-gray-300 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
     </header>
 
-    <!-- Main Content -->
-    <main class="relative z-10 pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        
-        <!-- Hero Section -->
-        <div class="mb-12 text-center reveal-on-scroll">
-            <h2 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-500 mb-4 tracking-tight">
-                Discover The <span class="neon-text text-vault-accent">Future</span>
-            </h2>
-            <p class="text-slate-400 max-w-2xl mx-auto text-lg">
-                Explore our curated collection of 503 high-fidelity gaming experiences. 
-                Immersive worlds await your command.
-            </p>
-        </div>
+    <!-- Mobile Search (Visible only on small screens) -->
+    <div class="md:hidden mt-24 px-4 mb-4">
+        <input type="text" id="mobile-search" class="w-full bg-slate-800/80 border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-500 outline-none" placeholder="Search games...">
+    </div>
 
-        <!-- Stats Bar -->
-        <div class="flex justify-between items-center mb-6 border-b border-white/5 pb-4 reveal-on-scroll">
-            <p class="text-slate-400 text-sm">Showing <span id="game-count" class="text-vault-accent font-bold">0</span> titles</p>
-            <div class="flex gap-2 text-xs text-slate-500">
-                <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-green-500"></div> Online</span>
-                <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-vault-accent"></div> Updated</span>
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 pt-24 pb-12">
+        
+        <!-- Hero Stats -->
+        <div class="mb-10 flex flex-col md:flex-row justify-between items-end border-b border-gray-800 pb-6">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">Explore The <span class="text-cyan-400">Legends</span></h2>
+                <p class="text-gray-400 max-w-xl">Curated collection of the greatest video games of all time. Experience the legacy.</p>
+            </div>
+            <div class="mt-4 md:mt-0 text-right">
+                <span id="game-count" class="text-4xl font-black text-white">150</span>
+                <span class="text-cyan-400 font-bold uppercase tracking-wider text-sm ml-2">Games Available</span>
             </div>
         </div>
 
         <!-- Game Grid -->
-        <div id="game-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Cards injected by JS -->
+        <div id="game-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            <!-- Cards injected via JS -->
         </div>
 
-        <!-- Empty State (Hidden by default) -->
-        <div id="empty-state" class="hidden text-center py-20">
-            <div class="inline-block p-6 rounded-full bg-slate-800/50 mb-4">
-                <i class="fa-solid fa-ghost text-4xl text-slate-600"></i>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">No games found</h3>
-            <p class="text-slate-400">Try adjusting your search or filters.</p>
-            <button onclick="resetFilters()" class="mt-4 px-6 py-2 bg-vault-accent/10 text-vault-accent border border-vault-accent/50 rounded-full hover:bg-vault-accent hover:text-black transition-all">
-                Reset Filters
-            </button>
+        <!-- No Results State -->
+        <div id="no-results" class="hidden flex-col items-center justify-center py-20 text-center">
+            <div class="text-6xl mb-4">👾</div>
+            <h3 class="text-2xl font-bold text-white mb-2">Game Not Found</h3>
+            <p class="text-gray-400">Try adjusting your search or filter to find what you're looking for.</p>
+            <button onclick="resetFilters()" class="mt-6 px-6 py-2 bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 rounded-full hover:bg-cyan-500 hover:text-white transition-all">Clear Filters</button>
         </div>
     </main>
 
-    <!-- Modal Overlay -->
-    <div id="game-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 bg-[#020617] py-8 mt-auto">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <span class="text-xl font-bold text-white">ULTIMATE <span class="text-cyan-400">VAULT</span></span>
+                <p class="text-xs text-gray-500 mt-1">© 2026 Yasem Coopration. All rights reserved.</p>
+            </div>
+            <div class="flex gap-6 text-sm text-gray-400">
+                <a href="#" class="hover:text-cyan-400 transition-colors">Privacy</a>
+                <a href="#" class="hover:text-cyan-400 transition-colors">Terms</a>
+                <a href="#" class="hover:text-cyan-400 transition-colors">Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Game Details Modal -->
+    <div id="game-modal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm modal-backdrop opacity-0" id="modal-backdrop"></div>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="modal-content relative w-full max-w-5xl bg-[#0f172a] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] border border-gray-700">
+            
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-20 p-2 bg-black/50 rounded-full text-white hover:bg-red-500/80 transition-colors backdrop-blur-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
 
-        <!-- Modal Panel -->
-        <div class="relative z-10 h-full w-full flex items-center justify-center p-4 pointer-events-none">
-            <div class="glass-panel w-full max-w-5xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row transform scale-95 opacity-0 modal-content pointer-events-auto border border-white/10" id="modal-panel">
-                
-                <!-- Close Button -->
-                <button onclick="closeModal()" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/50 text-white hover:bg-vault-accent hover:text-black transition-all border border-white/10">
-                    <i class="fa-solid fa-times text-xl w-6 h-6 flex items-center justify-center"></i>
-                </button>
+            <!-- Left: Media -->
+            <div class="w-full md:w-3/5 bg-black relative group">
+                <div class="aspect-video w-full h-full">
+                    <iframe id="modal-video" class="w-full h-full" src="" title="Game Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
 
-                <!-- Left: Media -->
-                <div class="w-full md:w-3/5 bg-black relative group h-64 md:h-auto">
-                    <div id="modal-video-container" class="w-full h-full">
-                        <!-- Iframe injected here -->
+            <!-- Right: Info -->
+            <div class="w-full md:w-2/5 p-6 md:p-8 flex flex-col overflow-y-auto bg-gradient-to-b from-[#0f172a] to-[#020617]">
+                <div class="mb-auto">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span id="modal-category" class="px-3 py-1 text-xs font-bold uppercase tracking-wider text-cyan-900 bg-cyan-400 rounded-full">Action</span>
+                        <span class="text-gray-500 text-xs">•</span>
+                        <span id="modal-year" class="text-gray-400 text-xs font-mono">2023</span>
                     </div>
-                    <!-- Overlay Gradient -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60 pointer-events-none"></div>
+                    
+                    <h2 id="modal-title" class="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">Game Title</h2>
+                    
+                    <div class="prose prose-invert prose-sm mb-6 text-gray-300 leading-relaxed" id="modal-desc">
+                        <!-- Description injected here -->
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700">
+                            <p class="text-xs text-gray-500 uppercase">Rating</p>
+                            <p class="text-lg font-bold text-green-400">9.8/10</p>
+                        </div>
+                        <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700">
+                            <p class="text-xs text-gray-500 uppercase">Players</p>
+                            <p class="text-lg font-bold text-purple-400">Single/Multi</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Right: Content -->
-                <div class="w-full md:w-2/5 p-6 md:p-8 flex flex-col overflow-y-auto bg-slate-900/50">
-                    <div class="mb-auto">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span id="modal-category" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-vault-accent/10 text-vault-accent border border-vault-accent/20">
-                                Action
-                            </span>
-                            <div class="flex text-yellow-400 text-xs gap-0.5">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star-half-stroke"></i>
-                            </div>
-                        </div>
-                        
-                        <h2 id="modal-title" class="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">Game Title</h2>
-                        
-                        <div class="prose prose-invert prose-sm max-w-none mb-6 text-slate-300" id="modal-description">
-                            <!-- Description injected here -->
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4 mb-8">
-                            <div class="p-3 rounded-lg bg-white/5 border border-white/5">
-                                <p class="text-xs text-slate-500 uppercase">Release Date</p>
-                                <p class="text-sm font-semibold text-white" id="modal-date">2023</p>
-                            </div>
-                            <div class="p-3 rounded-lg bg-white/5 border border-white/5">
-                                <p class="text-xs text-slate-500 uppercase">Developer</p>
-                                <p class="text-sm font-semibold text-white" id="modal-dev">Studio Name</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 pt-6 border-t border-white/10">
-                        <button class="w-full py-4 bg-gradient-to-r from-vault-accent to-blue-600 rounded-xl font-bold text-white shadow-lg shadow-vault-accent/25 hover:shadow-vault-accent/50 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2 group animate-pulse-glow">
-                            <i class="fa-solid fa-download group-hover:animate-bounce"></i>
-                            <span>Download Now</span>
-                        </button>
-                        <p class="text-center text-xs text-slate-500 mt-3">Instant delivery via secure CDN.</p>
-                    </div>
+                <div class="mt-6 pt-6 border-t border-gray-800">
+                    <a id="modal-download" href="#" target="_blank" class="btn-pulse w-full block text-center bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-cyan-500/25 transition-all transform hover:scale-[1.02]">
+                        Download Now
+                    </a>
+                    <p class="text-center text-xs text-gray-500 mt-3">External link to SteamUnlocked</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
     <script>
-        // --- Data Generation ---
-        const categories = ['Action', 'RPG', 'Strategy', 'FPS', 'Adventure', 'Racing', 'Puzzle', 'Horror', 'Sports', 'Indie'];
-        const developers = ['Nebula Studios', 'CyberForge', 'Quantum Arts', 'Void Interactive', 'Stellar Bit', 'Echo Games', 'Nexus Core'];
-        
-        // Helper to generate deterministic random numbers based on seed (index)
-        function seededRandom(seed) {
-            let x = Math.sin(seed++) * 10000;
-            return x - Math.floor(x);
-        }
-
-        // Generate 503 Games
-        const games = Array.from({ length: 503 }, (_, i) => {
-            const id = i + 1;
-            const category = categories[Math.floor(seededRandom(id) * categories.length)];
-            const dev = developers[Math.floor(seededRandom(id + 100) * developers.length)];
-            const year = 2015 + Math.floor(seededRandom(id + 200) * 9);
-            
-            // Create varied titles
-            const prefixes = ['Cyber', 'Neon', 'Dark', 'Star', 'Void', 'Quantum', 'Hyper', 'Mega', 'Ultra', 'Last'];
-            const suffixes = ['Nexus', 'Protocol', 'Chronicles', 'Reborn', 'Legends', 'Shift', 'Runner', 'Core', 'Frontier', 'Dreams'];
-            const title = `${prefixes[Math.floor(seededRandom(id) * prefixes.length)]} ${suffixes[Math.floor(seededRandom(id + 50) * suffixes.length)]} ${id > 100 ? id : ''}`.trim();
-
-            // Description generator
-            const desc = `**Experience the ultimate ${category.toLowerCase()} adventure.**\n\nIn ${title}, you will traverse vast digital landscapes, engage in intense tactical combat, and uncover a story that challenges the fabric of reality. Developed by the renowned ${dev}, this title pushes the boundaries of modern hardware with ray-traced visuals and a dynamic soundtrack.\n\n### Key Features:\n*   Immersive Open World\n*   Advanced Physics Engine\n*   Multiplayer Co-op Mode\n*   4K Resolution Support`;
-
-            return {
-                id,
-                title,
-                category,
-                developer: dev,
-                year,
-                description: desc,
-                // Using specific video IDs for variety
-                videoId: ['dQw4w9WgXcQ', 'M7lc1UVf-VE', 'L_jWHffIx5E', '9bZkp7q19f0', 'kJQP7kiw5Fk'][i % 5], 
-                image: `https://picsum.photos/seed/${id + 100}/400/300` // Using picsum for reliable game-like abstract art
-            };
-        });
-
-        // --- State Management ---
-        let currentCategory = 'All';
-        let searchQuery = '';
+        // --- Game Data ---
+        // Categories: Action, RPG, Adventure, Shooter, Strategy, Platformer, Fighting, Racing, Survival, Puzzle
+        const gamesData = [
+            { title: "Grand Theft Auto V", category: "Action", year: 2013, desc: "When a young street hustler, a retired bank robber and a terrifying psychopath find themselves entangled with some of the most frightening and deranged elements of the criminal underworld, the U.S. government and the entertainment industry, they must pull off a series of dangerous heists to survive in a ruthless city in which they can trust nobody, least of all each other." },
+            { title: "Red Dead Redemption 2", category: "Adventure", year: 2018, desc: "Arthur Morgan and the Van der Linde gang are outlaws on the run. With federal agents and the best bounty hunters in the nation massing on their heels, the gang must rob, steal and fight their way across the rugged heartland of America in order to survive." },
+            { title: "Minecraft", category: "Survival", year: 2011, desc: "Explore randomly generated worlds and build amazing things from the simplest of homes to the grandest of castles. Play in creative mode with unlimited resources or mine deep into the world in survival mode, crafting weapons and armor to fend off the dangerous mobs." },
+            { title: "The Legend of Zelda: Ocarina of Time", category: "Adventure", year: 1998, desc: "The Legend of Zelda: Ocarina of Time reveals the genesis of the fantasy land of Hyrule, the origin of the Triforce, and the tale of the first exploits of Princess Zelda and the heroic adventurer Link." },
+            { title: "Tetris", category: "Puzzle", year: 1984, desc: "Tetris is a puzzle video game created by Soviet software engineer Alexey Pajitnov in 1984. In Tetris, players complete lines by moving differently shaped pieces, which descend onto the playing field." },
+            { title: "The Last of Us", category: "Action", year: 2013, desc: "Twenty years after a pandemic has radically changed known civilization, infected humans run wild and survivors are killing each other for food, weapons; whatever they can get their hands on. Joel, a violent survivor, is hired to smuggle a 14 year-old girl, Ellie, out of an oppressive military quarantine zone, but what starts as a small job soon transforms into a brutal journey across the U.S." },
+            { title: "The Witcher 3: Wild Hunt", category: "RPG", year: 2015, desc: "You are Geralt of Rivia, mercenary monster slayer. Before you stands a war-torn, monster-infested continent you can explore at will. Your current contract? Tracking down Ciri, the Child of Prophecy — a living weapon that can alter the shape of the world." },
+            { title: "Super Mario 64", category: "Platformer", year: 1996, desc: "Mario arrives at Peach's castle only to find that Bowser has taken over and locked everyone inside. To save the Princess, Mario must collect Power Stars by exploring the castle's many paintings, which lead to vast worlds full of secrets and challenges." },
+            { title: "Elden Ring", category: "RPG", year: 2022, desc: "THE NEW FANTASY ACTION RPG. Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring and become an Elden Lord in the Lands Between." },
+            { title: "Half-Life 2", category: "Shooter", year: 2004, desc: "The player again picks up the crowbar of research scientist Gordon Freeman, who finds himself on an alien-infested Earth being picked to the bone, its resources depleted, its populace dwindling. Freeman is thrust into the unenviable role of rescuing the world from the wrong he unleashed back at Black Mesa." },
+            { title: "The Legend of Zelda: Breath of the Wild", category: "Adventure", year: 2017, desc: "Step into a world of discovery, exploration, and adventure in The Legend of Zelda: Breath of the Wild, a boundary-breaking new game in the acclaimed series." },
+            { title: "God of War (2018)", category: "Action", year: 2018, desc: "His vengeance against the Gods of Olympus years behind him, Kratos now lives as a man in the realm of Norse Gods and monsters. It is in this harsh, unforgiving world that he must fight to survive… and teach his son to do the same." },
+            { title: "Skyrim", category: "RPG", year: 2011, desc: "The Elder Scrolls V: Skyrim is an open world action role-playing video game developed by Bethesda Game Studios. The game's main story revolves around the player character's quest to defeat Alduin the World-Eater, a dragon who is prophesied to destroy the world." },
+            { title: "Resident Evil 4", category: "Survival", year: 2005, desc: "Agent Leon S. Kennedy, one of the survivors of the Raccoon City incident, has been recruited as an agent reporting directly to the President. He is sent to a secluded European village to track down the President's missing daughter." },
+            { title: "Portal 2", category: "Puzzle", year: 2011, desc: "The single-player portion of Portal 2 introduces a cast of dynamic new characters, a host of fresh puzzle elements, and a much larger set of devious test chambers. Players will explore never-before-seen areas of the Aperture Science Labs and be reunited with GLaDOS, the occasionally murderous computer companion." },
+            { title: "Super Mario World", category: "Platformer", year: 1990, desc: "Mario and Luigi must save the Mushroom Kingdom from Bowser and the Koopalings. This time, they have a new ally: Yoshi, a friendly dinosaur who can eat enemies and gain special powers." },
+            { title: "Final Fantasy VII", category: "RPG", year: 1997, desc: "In Midgar, a city controlled by the mega-conglomerate Shinra Inc., the No. 1 Mako Reactor has been blown up by a rebel group, Avalanche. Cloud Strife, a former member of Shinra's elite combat force, SOLDIER, joins the group to fight back." },
+            { title: "BioShock", category: "Shooter", year: 2007, desc: "BioShock is a shooter unlike any you've ever played, loaded with weapons and tactics never seen. You'll have a complete arsenal at your disposal from simple revolvers to grenade launchers and chemical throwers, but you'll also be forced to genetically modify your DNA to create an even more deadly weapon: you." },
+            { title: "Mass Effect 2", category: "RPG", year: 2010, desc: "Recruit. Explore. Control. Two years after Commander Shepard repelled invading Reapers bent on the destruction of organic life, a mysterious new enemy has emerged. On the fringes of known space, something is silently abducting entire human colonies." },
+            { title: "Metal Gear Solid", category: "Action", year: 1998, desc: "You are Snake, a government agent on a mission to regain control of a secret nuclear weapons base from terrorist hands. But this is just the beginning, as Snake must uncover the true identity of the terrorists and stop them from unleashing a devastating weapon." },
+            { title: "Chrono Trigger", category: "RPG", year: 1995, desc: "A young man is transported into the past, changing the course of history and the outcome of the future. He has to find his way home, but first he must travel to the outer edges of time to repair the world's chronology." },
+            { title: "Red Dead Redemption", category: "Adventure", year: 2010, desc: "America, 1911. The Wild West is dying. When federal agents threaten his family, former outlaw John Marston is forced to pick up his guns again and hunt down the gang of criminals he once called friends." },
+            { title: "Halo: Combat Evolved", category: "Shooter", year: 2001, desc: "Bent on Humankind's extermination, a powerful fellowship of alien races known as the Covenant is wiping out Earth's fledgling interstellar empire. You and the other surviving defenders of a devastated colony-world make a desperate attempt to lure the alien fleet away from Earth." },
+            { title: "Super Mario Bros. 3", category: "Platformer", year: 1988, desc: "The Mushroom Kingdom has been invaded by the Koopalings, who have turned the kings of the seven kingdoms into animals. Mario and Luigi must travel through eight worlds to defeat Bowser and save Princess Toadstool." },
+            { title: "Bloodborne", category: "RPG", year: 2015, desc: "Face your fears as you search for answers in the ancient city of Yharnam, now cursed with a strange endemic illness spreading through the streets like wildfire. Danger, death and madness lurk around every corner of this dark and horrific world." },
+            { title: "Dark Souls", category: "RPG", year: 2011, desc: "A spiritual successor to Demon's Souls, the action RPG Dark Souls is set in a rich, dark fantasy universe. Intense action within the dungeons, encounters with terrifying enemies and innovative online features combine for a unique gaming experience." },
+            { title: "Street Fighter II", category: "Fighting", year: 1991, desc: "Street Fighter II is a competitive fighting game originally released for the arcades in 1991. It is the arcade sequel to the original Street Fighter released in 1987 and was Capcom's fourteenth title that ran on the CP System arcade hardware." },
+            { title: "Shadow of the Colossus", category: "Adventure", year: 2005, desc: "An open world action-adventure game where the player must travel across forbidden lands and defeat sixteen massive creatures, known as the Colossi, in order to restore the life of a girl named Mono." },
+            { title: "Portal", category: "Puzzle", year: 2007, desc: "Portal™ is a new single player game from Valve. Set in the mysterious Aperture Science Laboratories, Portal has been called one of the most innovative new games on the horizon and will offer gamers hours of unique gameplay." },
+            { title: "Call of Duty 4: Modern Warfare", category: "Shooter", year: 2007, desc: "The new action-thriller from the award-winning team at Infinity Ward, the creators of the Call of Duty® series, delivers the most intense and cinematic action experience ever. Armed with an arsenal of advanced and powerful modern day firepower, players are transported to treacherous hotspots around the globe to take on a rogue enemy group threatening the world." },
+            { title: "Pokémon Red/Blue", category: "RPG", year: 1996, desc: "Are you a boy? Or are you a girl? Begin your journey in Pallet Town and travel across the Kanto region to become the ultimate Pokémon Master by defeating the Elite Four and catching all 151 Pokémon." },
+            { title: "Batman: Arkham City", category: "Action", year: 2011, desc: "Arkham City builds upon the intense, atmospheric foundation of Batman: Arkham Asylum, sending players soaring into Arkham City - five times larger than the game world in Batman: Arkham Asylum - and the new maximum security 'home' for all of Gotham City's thugs, gangsters and insane criminal masterminds." },
+            { title: "Uncharted 2: Among Thieves", category: "Action", year: 2009, desc: "In this sequel to the 2007 Game of the Year, Drake is drawn back into the treacherous world of thieves and treasure seekers. This time he must race against a ruthless war criminal to uncover the secrets of Marco Polo's lost fleet." },
+            { title: "Super Metroid", category: "Platformer", year: 1994, desc: "Super Metroid is an action-adventure game developed and published by Nintendo for the Super Nintendo Entertainment System in 1994. It is the third installment in the Metroid series, following the events of the Game Boy game Metroid II: Return of Samus." },
+            { title: "The Legend of Zelda: A Link to the Past", category: "Adventure", year: 1991, desc: "The Legend of Zelda: A Link to the Past is an action-adventure game developed and published by Nintendo for the Super Nintendo Entertainment System. It is the third game in The Legend of Zelda series." },
+            { title: "Baldur's Gate 3", category: "RPG", year: 2023, desc: "Gather your party and return to the Forgotten Realms in a tale of fellowship and betrayal, sacrifice and survival, and the lure of absolute power. Mysterious abilities are awakening inside you, drawn from a mind flayer parasite planted in your brain." },
+            { title: "Grand Theft Auto: San Andreas", category: "Action", year: 2004, desc: "Five years ago, Carl Johnson escaped from the pressures of life in Los Santos, San Andreas, a city tearing itself apart with gang trouble, drugs and corruption. Now, it's the early 90's. Carl's got to go home." },
+            { title: "Hollow Knight", category: "Platformer", year: 2017, desc: "Forge your own path in Hollow Knight! An epic action adventure through a vast ruined kingdom of insects and heroes. Explore twisting caverns, battle tainted creatures and befriend bizarre bugs, all in a classic, hand-drawn 2D style." },
+            { title: "Hades", category: "Action", year: 2020, desc: "Defy the god of the dead as you hack and slash out of the Underworld in this rogue-like dungeon crawler from the creators of Bastion and Transistor." },
+            { title: "StarCraft", category: "Strategy", year: 1998, desc: "StarCraft is a military science fiction real-time strategy video game developed and published by Blizzard Entertainment. It was released for Microsoft Windows in 1998." },
+            { title: "Fallout: New Vegas", category: "RPG", year: 2010, desc: "Welcome to New Vegas - a city of dreamers and desperados being torn apart by warring factions vying for complete control of this desert oasis. It's a town where the right kind of person with the right kind of weaponry can really make a name for themselves." },
+            { title: "Doom (1993)", category: "Shooter", year: 1993, desc: "You're a marine stationed on Mars when a military experiment goes wrong. Your mission: Blast your way to freedom with the arsenal of weapons at your disposal. Face off against the forces of Hell in this legendary first-person shooter." },
+            { title: "Persona 5 Royal", category: "RPG", year: 2019, desc: "Don the mask and join the Phantom Thieves of Hearts as they stage grand heists, infiltrate the minds of the corrupt, and make them change their ways! Persona 5 Royal is packed with new characters, story depth, new locations to explore, and a new grappling hook mechanic for access to new areas." },
+            { title: "Metroid Prime", category: "Action", year: 2002, desc: "Samus Aran returns in a first-person adventure. After receiving a distress signal, she lands on the mysterious planet Tallon IV to stop Space Pirates from exploiting a powerful radioactive substance." },
+            { title: "Silent Hill 2", category: "Survival", year: 2001, desc: "James Sunderland receives a letter from his deceased wife, Mary, telling him to come to the 'special place' in Silent Hill. He travels to the foggy town to find her, but encounters monsters and disturbing imagery that reflect his inner psyche." },
+            { title: "GoldenEye 007", category: "Shooter", year: 1997, desc: "You are Bond. James Bond. You are assigned to covert operations connected with the GoldenEye weapons satellite. M will brief you on your mission and objectives from London. Q Branch will support your efforts with a plentiful supply of weapons and gadgets." },
+            { title: "Super Smash Bros. Ultimate", category: "Fighting", year: 2018, desc: "Gaming icons clash in the ultimate brawl you can play anytime, anywhere! Smash rivals off the stage as new characters Simon Belmont and King K. Rool join Inkling, Ridley, and every fighter in Super Smash Bros. history." },
+            { title: "World of Warcraft", category: "RPG", year: 2004, desc: "Join thousands of mighty heroes in an online world of magic and limitless adventure. World of Warcraft is a massively multiplayer online role-playing game set in the Warcraft fantasy universe." },
+            { title: "BioShock Infinite", category: "Shooter", year: 2013, desc: "Indebted to the wrong people, private investigator Booker DeWitt must take on an impossible task: travel to Columbia, a flying city above the clouds, and rescue a mysterious woman named Elizabeth." },
+            { title: "Civilization VI", category: "Strategy", year: 2016, desc: "Civilization VI offers new ways to engage with your world: cities now physically expand across the map, active research in technology and culture unlocks new potential, and competing leaders will pursue their own agendas based on their historical traits." },
+            { title: "The Last of Us Part II", category: "Action", year: 2020, desc: "Five years after their dangerous journey across the post-pandemic United States, Ellie and Joel have settled down in Jackson, Wyoming. When a violent event disrupts that peace, Ellie embarks on a relentless journey to carry out justice and find closure." },
+            { title: "Sekiro: Shadows Die Twice", category: "Action", year: 2019, desc: "Game of the Year - The New York Times. In Sekiro: Shadows Die Twice you are the 'one-armed wolf', a disgraced and disfigured warrior rescued from the brink of death. Bound to protect a young lord who is the descendant of an ancient bloodline, you become the target of many vicious enemies." },
+            { title: "Cyberpunk 2077", category: "RPG", year: 2020, desc: "Cyberpunk 2077 is an open-world, action-adventure story set in Night City, a megalopolis obsessed with power, glamour and body modification. You play as V, a mercenary outlaw going after a one-of-a-kind implant that is the key to immortality." },
+            { title: "Horizon Zero Dawn", category: "Action", year: 2017, desc: "Take on the role of skilled hunter Aloy as you explore a vibrant and lush world inhabited by mysterious mechanized creatures in an exhilarating new Action/RPG exclusively for the PlayStation®4 System." },
+            { title: "Spider-Man (2018)", category: "Action", year: 2018, desc: "Sony Interactive Entertainment, Insomniac Games, and Marvel have teamed up to create a brand-new and authentic Spider-Man adventure. This isn't the Spider-Man you've met or ever seen before." },
+            { title: "Ghost of Tsushima", category: "Action", year: 2020, desc: "In the late 13th century, the Mongol empire has laid waste to entire nations along their campaign to conquer the East. Tsushima Island is all that stands between mainland Japan and a massive Mongol invasion fleet led by the ruthless and cunning general, Khotun Khan." },
+            { title: "Overwatch", category: "Shooter", year: 2016, desc: "Overwatch is a team-based multiplayer first-person shooter developed and published by Blizzard Entertainment. Described as a 'hero shooter', Overwatch assigns players into two teams of six, with each player selecting from a roster of over 30 characters, known as 'heroes'." },
+            { title: "League of Legends", category: "Strategy", year: 2009, desc: "League of Legends is a multiplayer online battle arena video game developed and published by Riot Games for Microsoft Windows and macOS. Inspired by Defense of the Ancients, the game follows a freemium model." },
+            { title: "Counter-Strike: Global Offensive", category: "Shooter", year: 2012, desc: "Counter-Strike: Global Offensive (CS: GO) expands upon the team-based action gameplay that it pioneered when it was launched 19 years ago. CS: GO features new maps, characters, weapons, and game modes." },
+            { title: "Fortnite", category: "Shooter", year: 2017, desc: "Fortnite is an online video game developed by Epic Games and released in 2017. It is available in three distinct game mode versions that otherwise share the same general gameplay and game engine." },
+            { title: "Roblox", category: "Platformer", year: 2006, desc: "Roblox is an online game platform and game creation system that allows users to program games and play games created by other users. Founded by David Baszucki and Erik Cassel in 2004 and released in 2006." },
+            { title: "PUBG: Battlegrounds", category: "Shooter", year: 2017, desc: "PLAYERUNKNOWN'S BATTLEGROUNDS is a last-man-standing shooter being developed with community feedback. Players must fight to locate weapons and supplies in a massive 8x8 km island to be the lone survivor." },
+            { title: "Animal Crossing: New Horizons", category: "Simulation", year: 2020, desc: "Escape to a deserted island and create your own paradise as you explore, create, and customize in the Animal Crossing: New Horizons game. Your island getaway has a wealth of natural resources that can be used to craft everything from tools to creature comforts." },
+            { title: "Stardew Valley", category: "Simulation", year: 2016, desc: "You've inherited your grandfather's old farm plot in Stardew Valley. Armed with hand-me-down tools and a few coins, you set out to begin your new life. Can you learn to live off the land and turn these overgrown fields into a thriving home?" },
+            { title: "Terraria", category: "Adventure", year: 2011, desc: "Dig, Fight, Explore, Build: The very world is at your fingertips as you fight for survival, fortune, and glory. Will you delve deep into cavernous expanses in search of treasure and raw materials with which to craft ever-evolving gear, machinery, and aesthetics?" },
+            { title: "Mario Kart 8 Deluxe", category: "Racing", year: 2017, desc: "Hit the road with the definitive version of Mario Kart 8 and play anytime, anywhere! Race your friends or battle them in a revised battle mode on new and returning battle courses." },
+            { title: "Wii Sports", category: "Sports", year: 2006, desc: "Wii Sports is a sports simulation video game developed and published by Nintendo for the Wii video game console. The game was released in North America along with the Wii on November 19, 2006." },
+            { title: "Super Mario Odyssey", category: "Platformer", year: 2017, desc: "Join Mario on a massive, globe-trotting 3D adventure and use his incredible new abilities to collect Moons so you can power up your airship, the Odyssey, and rescue Princess Peach from Bowser's wedding plans!" },
+            { title: "The Legend of Zelda: Tears of the Kingdom", category: "Adventure", year: 2023, desc: "In this sequel to The Legend of Zelda: Breath of the Wild, you’ll decide your own path through the sprawling landscapes of Hyrule and the mysterious islands floating in the vast skies above." },
+            { title: "Resident Evil 2 (Remake)", category: "Survival", year: 2019, desc: "The genre-defining masterpiece Resident Evil 2 returns, completely rebuilt from the ground up for a deeper narrative experience. Using Capcom's proprietary RE Engine, Resident Evil 2 offers a fresh take on the classic survival horror saga." },
+            { title: "Final Fantasy X", category: "RPG", year: 2001, desc: "Final Fantasy X is set in the fantasy world of Spira, which is terrorized by a creature known as Sin. The story follows Tidus, a young man transported from his home city of Zanarkand to Spira after an attack by Sin." },
+            { title: "Metal Gear Solid 3: Snake Eater", category: "Action", year: 2004, desc: "Set in the 1960s, you become the legendary soldier Big Boss and must infiltrate Soviet territory to rescue a weapons scientist and sabotage a new super-weapon. Survive the harsh jungle environment and face off against the Cobra Unit." },
+            { title: "Assassin's Creed II", category: "Action", year: 2009, desc: "An epic story of family, vengeance and conspiracy set in the pristine, yet brutal, backdrop of Renaissance Italy. Ezio Auditore da Firenze learns the ways of the Assassins in order to avenge his family." },
+            { title: "Destiny 2", category: "Shooter", year: 2017, desc: "Destiny 2 is an action MMO with a single evolving world that you and your friends can join anytime, anywhere, absolutely free. Dive into the world of Destiny 2 to explore the mysteries of the solar system and experience responsive first-person shooter combat." },
+            { title: "Apex Legends", category: "Shooter", year: 2019, desc: "Conquer with character in Apex Legends, a free-to-play Hero Shooter where legendary characters with powerful abilities team up to battle for fame and fortune on the fringes of the Frontier." },
+            { title: "Rocket League", category: "Sports", year: 2015, desc: "Rocket League is a high-powered hybrid of arcade-style soccer and vehicular mayhem with easy-to-understand controls and fluid, physics-driven competition." },
+            { title: "Diablo II", category: "RPG", year: 2000, desc: "Diablo II is an action role-playing hack-and-slash video game developed by Blizzard North and published by Blizzard Entertainment in 2000 for Microsoft Windows, Classic Mac OS, and Mac OS X." },
+            { title: "Star Wars: Knights of the Old Republic", category: "RPG", year: 2003, desc: "It is four thousand years before the Galactic Empire and hundreds of Jedi Knights have fallen in battle against the ruthless Sith. You are the last hope of the Jedi Order. Can you master the awesome power of the Force on your quest to save the Republic?" },
+            { title: "Half-Life", category: "Shooter", year: 1998, desc: "Named Game of the Year by over 50 publications, Valve's debut title blends action and adventure with award-winning technology to create a frighteningly realistic world where players must think to survive." },
+            { title: "Deus Ex", category: "Action", year: 2000, desc: "The year is 2052 and the world is a dangerous and chaotic place. Terrorists operate openly - killing thousands; drugs, disease and pollution kill even more. The world's economies are close to collapse and the gap between the insanely wealthy and the desperately poor grows ever wider." },
+            { title: "System Shock 2", category: "Action", year: 1999, desc: "You awake aboard the starship Von Braun in the year 2114. You awake from cryo-sleep to find the ship overrun by a mutagenic virus and hostile cyborgs. You must survive and stop the artificial intelligence SHODAN from destroying humanity." },
+            { title: "Thief: The Dark Project", category: "Action", year: 1998, desc: "Sneak through the shadows of 12 treacherous missions including haunted cathedrals, subterranean ruins, and forbidding prisons, in a dark and sinister city. Constantine offers you a fortune to steal the Trickster's Gem." },
+            { title: "Baldur's Gate II: Shadows of Amn", category: "RPG", year: 2000, desc: "Kidnapped. Imprisoned. Tortured. The wizard Irenicus holds you captive in his stronghold, attempting to strip you of the powers that are your birthright. Can you escape the dungeons of Baldur's Gate and unravel the twisted schemes of your captor?" },
+            { title: "Planescape: Torment", category: "RPG", year: 1999, desc: "You are the Nameless One, a hulking figure covered in scars and tattoos collected over the course of countless lives—none of which you can remember, but are now coming back to haunt you. You must escape the city of Sigil and uncover the truth about your immortality." },
+            { title: "Fallout 2", category: "RPG", year: 1998, desc: "Fallout 2 is a post-apocalyptic computer role-playing game that was developed and published by Black Isle Studios in 1998 as a sequel to Interplay's Fallout." },
+            { title: "Undertale", category: "RPG", year: 2015, desc: "Welcome to UNDERTALE. In this RPG, you control a human who falls underground into the world of monsters. Now you must find your way out... or stay trapped forever." },
+            { title: "Celeste", category: "Platformer", year: 2018, desc: "Help Madeline survive her inner demons on her journey to the top of Celeste Mountain, in this super-tight, hand-crafted platformer from the creators of multiplayer classic TowerFall." },
+            { title: "Inside", category: "Platformer", year: 2016, desc: "Hunted and alone, a boy finds himself drawn into the center of a dark project. INSIDE is a dark, narrative-driven platformer combining intense action with challenging puzzles." },
+            { title: "Journey", category: "Adventure", year: 2012, desc: "Explore the ancient, mysterious world of Journey as you soar above ruins and glide across sands to discover its secrets. Play alone or in the company of a fellow traveler and explore its vast world together." },
+            { title: "Disco Elysium", category: "RPG", year: 2019, desc: "Disco Elysium is a groundbreaking open world role playing game. You're a detective with a unique skill system at your disposal and a whole city block to carve your path across. Interrogate unforgettable characters, crack murders or take bribes. Become a hero or an absolute disaster of a human being." },
+            { title: "Outer Wilds", category: "Adventure", year: 2019, desc: "Named Game of the Year 2019 by Giant Bomb, Polygon, Eurogamer, and The Guardian, Outer Wilds is a critically-acclaimed and award-winning open world mystery about a solar system trapped in an endless time loop." },
+            { title: "Slay the Spire", category: "Strategy", year: 2019, desc: "We fused card games and roguelikes together to make the best single player deckbuilder we could. Craft a unique deck, encounter bizarre creatures, discover relics of immense power, and Slay the Spire!" },
+            { title: "Monster Hunter: World", category: "Action", year: 2018, desc: "Welcome to a new world! In Monster Hunter: World, the latest installment in the series, you can enjoy the ultimate hunting experience, using everything at your disposal to hunt monsters in a new world teeming with surprises and excitement." },
+            { title: "Dragon Age: Origins", category: "RPG", year: 2009, desc: "You are a Grey Warden, one of the last of this legendary order of guardians. With the return of mankind's ancient foe and the kingdom engulfed in civil war, you have been chosen by fate to unite the shattered lands and slay the archdemon once and for all." },
+            { title: "Mass Effect", category: "RPG", year: 2007, desc: "You are Commander Shepard of the SS Normandy, an elite agent in humanity's Systems Alliance Military. Explore the galaxy as you investigate the mysterious disappearance of a human colony on a distant planet." },
+            { title: "Borderlands 2", category: "Shooter", year: 2012, desc: "A new era of shoot and loot is about to begin. Play as one of four new vault hunters facing off against a massive new world of creatures, psychos and the evil mastermind, Handsome Jack." },
+            { title: "Left 4 Dead 2", category: "Shooter", year: 2009, desc: "Set in the zombie apocalypse, Left 4 Dead 2 (L4D2) is the highly anticipated sequel to the award-winning Left 4 Dead, the #1 co-op game of 2008. This co-operative action horror FPS takes you and your friends through the cities, swamps and cemeteries of the Deep South." },
+            { title: "Team Fortress 2", category: "Shooter", year: 2007, desc: "Nine distinct classes provide a broad range of tactical abilities and personalities. Constantly updated with new game modes, maps, equipment and, most importantly, hats!" },
+            { title: "It Takes Two", category: "Adventure", year: 2021, desc: "Embark on the craziest journey of your life in It Takes Two, a genre-bending platform adventure created purely for co-op. Invite a friend to join for free with Friend's Pass and work together across a huge variety of gleefully disruptive gameplay challenges." },
+            { title: "Cuphead", category: "Platformer", year: 2017, desc: "Cuphead is a classic run and gun action game heavily focused on boss battles. Inspired by cartoons of the 1930s, the visuals and audio are painstakingly created with the same techniques of the era." },
+            { title: "Ori and the Will of the Wisps", category: "Platformer", year: 2020, desc: "Play as Ori, a small spirit who embarks on a journey to find courage and confront a dark nemesis. Experience a visually stunning, hand-crafted adventure with a deeply emotional story." },
+            { title: "Shovel Knight", category: "Platformer", year: 2014, desc: "Shovel Knight is a sweeping classic action adventure game with awesome gameplay, memorable characters, and an 8-bit retro aesthetic. It's a hot mashup of new and old!" },
+            { title: "Dead Cells", category: "Action", year: 2018, desc: "Dead Cells is a rogue-lite, metroidvania inspired, action-platformer. You'll explore a sprawling, ever-changing castle... assuming you’re able to fight your way past its keepers in 2D souls-lite combat." },
+            { title: "Returnal", category: "Shooter", year: 2021, desc: "Break the cycle of chaos on an always-changing alien planet in this third-person roguelike shooter. After crash-landing on this shape-shifting world, Selene must search through the barren landscape of an ancient civilization for her escape." },
+            { title: "Control", category: "Action", year: 2019, desc: "A corruptive presence has invaded the Federal Bureau of Control…Only you have the power to stop it. The world is now your weapon in an epic fight to annihilate an ominous enemy through deep and unpredictable environments." },
+            { title: "Alan Wake 2", category: "Survival", year: 2023, desc: "Saga Anderson arrives to investigate ritualistic murders in a small town. Alan Wake pens a dark story to shape the reality around him. These two heroes are somehow connected. Can they become the heroes they need to be?" },
+            { title: "Death Stranding", category: "Action", year: 2019, desc: "From legendary game creator Hideo Kojima comes an all-new, genre-defying experience for PlayStation®4. Sam Bridges must brave a world utterly transformed by the Death Stranding." },
+            { title: "Nier: Automata", category: "Action", year: 2017, desc: "NieR: Automata tells the story of androids 2B, 9S and A2 and their battle to reclaim the machine-driven dystopia overrun by powerful machines. Humanity has been driven from the Earth by mechanical beings from another world." },
+            { title: "Tales of Arise", category: "RPG", year: 2021, desc: "300 years of tyranny. A mysterious mask. Lost pain and memories. Wield the Blazing Sword and join a mysterious, untouchable girl to fight your oppressors. Experience a tale of liberation, featuring characters with next-gen graphical expressiveness!" },
+            { title: "Yakuza: Like a Dragon", category: "RPG", year: 2020, desc: "Ichiban Kasuga, a low-ranking grunt of a low-ranking yakuza family in Tokyo, faces an 18-year prison sentence after taking the fall for a crime he didn't commit. Never losing faith, he loyally serves his time and returns to society to discover that no one was waiting for him on the outside." },
+            { title: "Persona 4 Golden", category: "RPG", year: 2012, desc: "Inaba—a quiet town in rural Japan sets the scene for budding adolescence in Persona 4 Golden. A coming of age story that sets the protagonist and his friends on a journey kickstarted by a chain of serial murders." },
+            { title: "Fire Emblem: Three Houses", category: "Strategy", year: 2019, desc: "War is coming to the continent of Fódlan. Here, order is maintained by the Church of Seiros, which hosts the prestigious Officers Academy within its headquarters. You are invited to teach one of its three mighty houses, each comprised of students brimming with personality and represented by a royal from one of three territories." },
+            { title: "Xenoblade Chronicles", category: "RPG", year: 2010, desc: "Xenoblade Chronicles invites players to explore a truly vast world. In addition to the game's main story, there are a number of side quests for players to complete, and many areas to explore." },
+            { title: "Bayonetta", category: "Action", year: 2009, desc: "Bayonetta is a stylish and cinematic action game, directed by Hideki Kamiya. As a witch with magical powers and deadly weapons, you must fight against angelic enemies to discover the truth about your past." },
+            { title: "Devil May Cry 5", category: "Action", year: 2019, desc: "The ultimate Devil Hunter is back in style, in the game action fans have been waiting for. A brand new entry in the legendary over-the-top action series, complete with its signature blend of high-octane stylized action and otherworldly and original characters." },
+            { title: "Tekken 7", category: "Fighting", year: 2015, desc: "Discover the epic conclusion of the Mishima clan and unravel the reasons behind each step of their ceaseless fight. Powered by Unreal Engine 4, TEKKEN 7 features stunning story-driven cinematic battles and intense duels that can be enjoyed with friends and rivals alike." },
+            { title: "Mortal Kombat 11", category: "Fighting", year: 2019, desc: "Mortal Kombat is back and better than ever in the next evolution of the iconic franchise. The all new Custom Character Variations give you unprecedented control to customize the fighters and make them your own." },
+            { title: "Dragon Ball FighterZ", category: "Fighting", year: 2018, desc: "DRAGON BALL FighterZ is born from what makes the DRAGON BALL series so loved and famous: endless spectacular fights with its all-powerful fighters." },
+            { title: "Guilty Gear Strive", category: "Fighting", year: 2021, desc: "Guilty Gear -Strive- is the latest entry in the critically acclaimed Guilty Gear fighting game franchise. Created by Daisuke Ishiwatari and developed by Arc System Works, 'Strive' upholds the series' reputation for a high octane soundtrack." },
+            { title: "Street Fighter V", category: "Fighting", year: 2016, desc: "Experience the intensity of head-to-head battles with Street Fighter® V! Choose from 16 iconic characters, each with their own personal story and unique training challenges." },
+            { title: "SoulCalibur VI", category: "Fighting", year: 2018, desc: "Bring more than your fists to the fight! Featuring all-new battle mechanics and characters, SOULCALIBUR VI marks a new era of the historic franchise. Welcome back to the stage of history!" },
+            { title: "Super Smash Bros. Melee", category: "Fighting", year: 2001, desc: "Super Smash Bros. Melee is a crossover fighting video game developed by HAL Laboratory and published by Nintendo for the GameCube. It is the second installment in the Super Smash Bros. series." },
+            { title: "Mario Party Superstars", category: "Party", year: 2021, desc: "Play the board game mode locally or online and minigames online only. Features 100 minigames from throughout the Mario Party series." },
+            { title: "Donkey Kong Country", category: "Platformer", year: 1994, desc: "Donkey Kong Country is a platform video game developed by Rare and published by Nintendo for the Super Nintendo Entertainment System (SNES). It was released in 1994." },
+            { title: "Banjo-Kazooie", category: "Platformer", year: 1998, desc: "Banjo-Kazooie is a platform video game developed by Rare and originally released for the Nintendo 64 console in 1998. It is the first game in the Banjo-Kazooie series and follows the story of a bear, Banjo, and a bird, Kazooie, as they try to stop the plans of the witch Gruntilda." },
+            { title: "Spyro Reignited Trilogy", category: "Platformer", year: 2018, desc: "The original roast master is back! Same sick burns, same smoldering attitude, now all scaled up in stunning HD. Spyro is bringing the heat like never before in the Spyro Reignited Trilogy game collection." },
+            { title: "Crash Bandicoot N. Sane Trilogy", category: "Platformer", year: 2017, desc: "Your favorite marsupial, Crash Bandicoot™, is back! He's enhanced, entranced and ready-to-dance with the N. Sane Trilogy game collection. Now you can experience Crash Bandicoot like never before." },
+            { title: "Ratchet & Clank: Rift Apart", category: "Action", year: 2021, desc: "Blast your way through an interdimensional adventure with Ratchet and Clank. Go dimension-hopping as they take on an evil emperor from another reality." },
+            { title: "Jak and Daxter: The Precursor Legacy", category: "Platformer", year: 2001, desc: "Jak and Daxter: The Precursor Legacy is an open-world platformer video game developed by Naughty Dog and published by Sony Computer Entertainment for the PlayStation 2." },
+            { title: "Sly Cooper and the Thievius Raccoonus", category: "Platformer", year: 2002, desc: "Sly Cooper is a kinetic comic adventure that combines 3D action and stealth gameplay with a stylish, animated film look. As Sly Cooper, the world's greatest thief, you must recover the pages of the Thievius Raccoonus." },
+            { title: "Kingdom Hearts II", category: "RPG", year: 2005, desc: "Kingdom Hearts II is an action role-playing game developed and published by Square Enix in 2005 for the PlayStation 2 video game console. The game is a sequel to Kingdom Hearts, which combined Disney and Final Fantasy elements." },
+            { title: "Okami", category: "Adventure", year: 2006, desc: "In Okami, the player takes the role of the mythical sun goddess Amaterasu, in the form of a wolf. Her task is to restore color (or 'life') to the world by destroying the monsters who have stolen it." },
+            { title: "ICO", category: "Adventure", year: 2001, desc: "ICO is an action-adventure game developed by Team Ico and published by Sony Computer Entertainment, released for the PlayStation 2 video game console in 2001 and 2002 in various regions." },
+            { title: "Prince of Persia: The Sands of Time", category: "Action", year: 2003, desc: "Amidst the scorched sands of ancient Persia, there is a legend spun in an ancient tongue. It speaks of a time borne by blood and ruled by deceit. It is within this war torn land that a young Prince discovers a magic dagger." },
+            { title: "Splinter Cell: Chaos Theory", category: "Action", year: 2005, desc: "You are Sam Fisher, the NSA's most elite black-ops agent. To save the world from a devastating war, you must infiltrate hostile territories, neutralize enemy agents, and uncover the truth behind the threat." },
+            { title: "Hitman 3", category: "Action", year: 2021, desc: "Death Awaits. Agent 47 returns as a ruthless professional for the most important contracts of his entire career. Supported by his Agency handler, Diana Burnwood, 47 joins forces with his long-lost friend Lucas Grey." },
+            { title: "Dishonored", category: "Action", year: 2012, desc: "Dishonored is an immersive first-person action game that casts you as a supernatural assassin driven by revenge. With Dishonored’s flexible combat system, creatively eliminate your targets as you combine the supernatural abilities, weapons and unusual gadgets at your disposal." },
+            { title: "Prey (2017)", category: "Action", year: 2017, desc: "In Prey, you awaken aboard Talos I, a space station orbiting the moon in the year 2032. You are the key subject of an experiment meant to alter humanity forever – but things have gone terribly wrong." },
+            { title: "Wolfenstein: The New Order", category: "Shooter", year: 2014, desc: "Europe, 1960. The Nazis turned the tide of the war using a new kind of mysterious, advanced technology. In the ensuing bloodshed, Nazi forces decimated the resistance and won the war. You are B.J. Blazkowicz, the American war hero." },
+            { title: "Doom Eternal", category: "Shooter", year: 2020, desc: "Hell’s armies have invaded Earth. Become the Slayer in an epic single-player campaign to conquer demons across dimensions and stop the final destruction of humanity." },
+            { title: "Titanfall 2", category: "Shooter", year: 2016, desc: "Call down your Titan and get ready for an exhilarating first-person shooter experience. Featuring a single player campaign that explores the unique bond between man and machine." },
+            { title: "Battlefield 1", category: "Shooter", year: 2016, desc: "Battlefield 1 takes you back to The Great War, WW1, where new technology and worldwide conflict changed the face of warfare forever." },
+            { title: "Call of Duty: Warzone", category: "Shooter", year: 2020, desc: "Welcome to Warzone, the new free-to-play massive combat arena from the world of Modern Warfare®. Drop in, armor up, loot for rewards, and battle your way to the top." },
+            { title: "Rainbow Six Siege", category: "Shooter", year: 2015, desc: "Master the art of destruction and gadgetry in Tom Clancy’s Rainbow Six Siege. Face intense close quarters combat, high lethality, tactical decision making, team play and explosive action within every moment." },
+            { title: "Valorant", category: "Shooter", year: 2020, desc: "Blend your style and experience on a global, competitive stage. You have 13 rounds to attack and defend your side using sharp gunplay and tactical abilities." },
+            { title: "Genshin Impact", category: "RPG", year: 2020, desc: "Step into Teyvat, a vast world teeming with life and flowing with elemental energy. You and your sibling arrived here from another world. Separated on arrival, you now begin your search for answers." },
+            { title: "Honkai: Star Rail", category: "RPG", year: 2023, desc: "Honkai: Star Rail is a new HoYoverde space fantasy RPG. Hop aboard the Astral Express and experience the galaxy's infinite wonders filled with adventure and thrills." },
+            { title: "Final Fantasy XIV", category: "RPG", year: 2013, desc: "Take part in an epic and ever-changing FINAL FANTASY as you adventure and explore with friends from around the world. Experience all the hallmarks of the best-selling franchise." },
+            { title: "Guild Wars 2", category: "RPG", year: 2012, desc: "Guild Wars 2 is an online role-playing game with fast-paced action combat, a rich and detailed universe of stories, awe-inspiring landscapes to explore, two challenging player vs. player modes—and no subscription fees!" }
+        ];
 
         // --- DOM Elements ---
-        const gridEl = document.getElementById('game-grid');
-        const countEl = document.getElementById('game-count');
-        const emptyStateEl = document.getElementById('empty-state');
-        const filterContainerEl = document.getElementById('category-filters');
+        const grid = document.getElementById('game-grid');
         const searchInput = document.getElementById('search-input');
+        const mobileSearch = document.getElementById('mobile-search');
+        const categoryFilter = document.getElementById('category-filter');
+        const noResults = document.getElementById('no-results');
+        const gameCount = document.getElementById('game-count');
         const modal = document.getElementById('game-modal');
-        const modalBackdrop = document.getElementById('modal-backdrop');
-        const modalPanel = document.getElementById('modal-panel');
+        const modalVideo = document.getElementById('modal-video');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+        const modalCategory = document.getElementById('modal-category');
+        const modalYear = document.getElementById('modal-year');
+        const modalDownload = document.getElementById('modal-download');
 
         // --- Initialization ---
         function init() {
-            renderFilters();
-            filterAndRenderGames();
-            setupIntersectionObserver();
-            setupKeyboardShortcuts();
+            renderGames(gamesData);
+            setupObservers();
         }
 
-        // --- Rendering Logic ---
-
-        function renderFilters() {
-            const allBtn = createFilterBtn('All', true);
-            filterContainerEl.appendChild(allBtn);
-
-            categories.forEach(cat => {
-                filterContainerEl.appendChild(createFilterBtn(cat, false));
-            });
+        // --- Rendering ---
+        function getImageUrl(title) {
+            // Using Pollinations for reliable, AI-generated game art based on title
+            // Encoding title for URL
+            const query = encodeURIComponent(`${title} video game cover art, cinematic, 4k, detailed`);
+            return `https://image.pollinations.ai/prompt/${query}?width=400&height=600&nologo=true`;
         }
 
-        function createFilterBtn(category, isActive) {
-            const btn = document.createElement('button');
-            btn.className = `px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 border ${
-                isActive 
-                ? 'bg-vault-accent text-black border-vault-accent shadow-[0_0_15px_rgba(0,242,255,0.4)]' 
-                : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:border-slate-500 hover:text-white'
-            }`;
-            btn.textContent = category;
-            btn.onclick = () => setCategory(category, btn);
-            return btn;
-        }
-
-        function setCategory(category, btnElement) {
-            currentCategory = category;
+        function renderGames(games) {
+            grid.innerHTML = '';
             
-            // Update UI
-            Array.from(filterContainerEl.children).forEach(child => {
-                child.className = 'px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 border bg-slate-800/50 text-slate-400 border-slate-700 hover:border-slate-500 hover:text-white';
-            });
-            btnElement.className = 'px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 border bg-vault-accent text-black border-vault-accent shadow-[0_0_15px_rgba(0,242,255,0.4)]';
-            
-            filterAndRenderGames();
-        }
-
-        // Fuzzy Search Logic
-        function fuzzyMatch(str, pattern) {
-            pattern = pattern.split("").reduce((a, b) => a + ".*" + b);
-            return (new RegExp(pattern)).test(str.toLowerCase());
-        }
-
-        function filterAndRenderGames() {
-            gridEl.innerHTML = '';
-            
-            const filtered = games.filter(game => {
-                const matchesCategory = currentCategory === 'All' || game.category === currentCategory;
-                const matchesSearch = searchQuery === '' || 
-                                      fuzzyMatch(game.title, searchQuery.toLowerCase()) || 
-                                      game.category.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchesCategory && matchesSearch;
-            });
-
-            countEl.textContent = filtered.length;
-
-            if (filtered.length === 0) {
-                emptyStateEl.classList.remove('hidden');
+            if (games.length === 0) {
+                noResults.classList.remove('hidden');
+                noResults.classList.add('flex');
+                gameCount.innerText = 0;
+                return;
             } else {
-                emptyStateEl.classList.add('hidden');
-                filtered.forEach((game, index) => {
-                    // Stagger delay based on index for initial load animation
-                    const card = createGameCard(game, index);
-                    gridEl.appendChild(card);
-                });
-                // Re-observe new elements
-                setupIntersectionObserver();
+                noResults.classList.add('hidden');
+                noResults.classList.remove('flex');
+                gameCount.innerText = games.length;
             }
-        }
 
-        function createGameCard(game, index) {
-            const div = document.createElement('div');
-            div.className = 'reveal-on-scroll group relative h-80 rounded-2xl glass-card cursor-pointer overflow-hidden';
-            // Stagger animation delay inline style for initial load
-            div.style.transitionDelay = `${(index % 10) * 50}ms`; 
+            games.forEach((game, index) => {
+                const card = document.createElement('div');
+                card.className = 'game-card glass-panel rounded-xl overflow-hidden cursor-pointer group';
+                card.setAttribute('data-index', index);
+                card.onclick = () => openModal(game);
 
-            div.innerHTML = `
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-40" 
-                     style="background-image: url('${game.image}');">
-                </div>
-                
-                <!-- Glow Border Effect -->
-                <div class="absolute inset-0 glow-border pointer-events-none"></div>
-                
-                <!-- Gradient Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-90"></div>
+                const imgUrl = getImageUrl(game.title);
 
-                <!-- Content -->
-                <div class="absolute inset-0 p-6 flex flex-col justify-end transform transition-transform duration-300 group-hover:translate-y-[-4px]">
-                    <div class="mb-auto flex justify-between items-start">
-                        <span class="px-2 py-1 bg-vault-accent/20 backdrop-blur-md border border-vault-accent/30 text-vault-accent text-[10px] font-bold uppercase tracking-wider rounded">
-                            ${game.category}
-                        </span>
-                        <span class="text-xs text-slate-400 font-mono bg-black/30 px-2 py-1 rounded">${game.year}</span>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-xl font-bold text-white mb-1 leading-tight group-hover:text-vault-accent transition-colors">${game.title}</h3>
-                        <p class="text-sm text-slate-400 mb-4">${game.developer}</p>
+                card.innerHTML = `
+                    <div class="relative aspect-[3/4] overflow-hidden">
+                        <img src="${imgUrl}" alt="${game.title}" class="card-image w-full h-full object-cover" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
                         
-                        <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
-                            <button class="flex-1 py-2 bg-white text-slate-900 rounded-lg text-xs font-bold uppercase tracking-wide hover:bg-vault-accent transition-colors">
-                                View Details
-                            </button>
-                            <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-vault-accent hover:text-black transition-colors">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
+                        <!-- Category Badge -->
+                        <div class="absolute top-3 left-3">
+                            <span class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-black bg-cyan-400 rounded-md shadow-lg shadow-cyan-500/50">
+                                ${game.category}
+                            </span>
+                        </div>
+
+                        <!-- Hover Overlay -->
+                        <div class="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-75">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                    <div class="p-4 relative z-10 bg-[#0f172a]/80 backdrop-blur-md">
+                        <h3 class="text-white font-bold text-lg leading-tight mb-1 truncate group-hover:text-cyan-400 transition-colors">${game.title}</h3>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-xs text-gray-400">${game.year}</span>
+                            <span class="text-xs text-cyan-500 font-medium flex items-center gap-1">
+                                Details 
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
 
-            div.onclick = () => openModal(game);
-            return div;
+            // Re-initialize observer for new elements
+            setupObservers();
+        }
+
+        // --- Filtering Logic ---
+        function filterGames() {
+            const searchTerm = (searchInput.value || mobileSearch.value).toLowerCase();
+            const category = categoryFilter.value;
+
+            const filtered = gamesData.filter(game => {
+                const matchesSearch = game.title.toLowerCase().includes(searchTerm);
+                const matchesCategory = category === 'All' || game.category === category;
+                return matchesSearch && matchesCategory;
+            });
+
+            renderGames(filtered);
         }
 
         function resetFilters() {
-            searchQuery = '';
             searchInput.value = '';
-            setCategory('All', filterContainerEl.children[0]);
+            mobileSearch.value = '';
+            categoryFilter.value = 'All';
+            filterGames();
         }
 
-        // --- Intersection Observer for Scroll Animations ---
-        let observer;
-        function setupIntersectionObserver() {
-            if (observer) observer.disconnect();
+        // Event Listeners
+        searchInput.addEventListener('input', filterGames);
+        mobileSearch.addEventListener('input', filterGames);
+        categoryFilter.addEventListener('change', filterGames);
 
-            observer = new IntersectionObserver((entries) => {
+        // --- Intersection Observer for Staggered Reveal ---
+        function setupObservers() {
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target); // Only animate once
+                        // Add delay based on index for staggered effect
+                        const index = entry.target.getAttribute('data-index');
+                        entry.target.style.transitionDelay = `${(index % 10) * 50}ms`;
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
                     }
                 });
             }, {
                 threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
+                rootMargin: '0px 0px -50px 0px'
             });
 
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
-                observer.observe(el);
+            document.querySelectorAll('.game-card').forEach(card => {
+                observer.observe(card);
             });
         }
 
         // --- Modal Logic ---
         function openModal(game) {
-            // Populate Data
-            document.getElementById('modal-title').textContent = game.title;
-            document.getElementById('modal-category').textContent = game.category;
-            document.getElementById('modal-date').textContent = game.year;
-            document.getElementById('modal-dev').textContent = game.developer;
+            modalTitle.innerText = game.title;
+            modalDesc.innerText = game.desc;
+            modalCategory.innerText = game.category;
+            modalYear.innerText = game.year;
             
-            // Markdown-like parsing (simple version)
-            const htmlDesc = game.description
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n\n/g, '</p><p>')
-                .replace(/\n/g, '<br>')
-                .replace(/\* (.*?)/g, '<li class="ml-4 list-disc">$1</li>');
-            document.getElementById('modal-description').innerHTML = `<p>${htmlDesc}</p>`;
-
-            // Video
-            const videoContainer = document.getElementById('modal-video-container');
-            videoContainer.innerHTML = `
-                <iframe class="w-full h-full" src="https://www.youtube.com/embed/${game.videoId}?autoplay=1&mute=1&controls=1" 
-                title="YouTube video player" frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen></iframe>
-            `;
-
-            // Show Modal
-            modal.classList.remove('hidden');
-            // Small delay to allow display:block to apply before opacity transition
-            setTimeout(() => {
-                modalBackdrop.classList.remove('opacity-0');
-                modalPanel.classList.remove('opacity-0', 'scale-95');
-                modalPanel.classList.add('scale-100');
-            }, 10);
+            // Construct search query for YouTube
+            const ytQuery = encodeURIComponent(`${game.title} official trailer`);
+            modalVideo.src = `https://www.youtube.com/embed?search=${ytQuery}&autoplay=1&iv_load_policy=3`;
             
+            // Construct SteamUnlocked Link
+            const suQuery = encodeURIComponent(game.title);
+            modalDownload.href = `https://steamunlocked.net/?s=${suQuery}&app=100`;
+
+            modal.classList.add('active');
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
         }
 
         function closeModal() {
-            modalBackdrop.classList.add('opacity-0');
-            modalPanel.classList.remove('scale-100');
-            modalPanel.classList.add('opacity-0', 'scale-95');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.getElementById('modal-video-container').innerHTML = ''; // Stop video
-                document.body.style.overflow = '';
-            }, 300);
+            modal.classList.remove('active');
+            modalVideo.src = ''; // Stop video
+            document.body.style.overflow = '';
         }
 
-        // Close on backdrop click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal || e.target.closest('#modal-backdrop')) {
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
                 closeModal();
             }
         });
 
-        // --- Event Listeners ---
-        searchInput.addEventListener('input', (e) => {
-            searchQuery = e.target.value;
-            filterAndRenderGames();
-        });
-
-        function setupKeyboardShortcuts() {
-            document.addEventListener('keydown', (e) => {
-                // Ctrl/Cmd + K to focus search
-                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                    e.preventDefault();
-                    searchInput.focus();
-                }
-                // Escape to close modal
-                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                    closeModal();
-                }
-            });
-        }
-
-        // Run
-        document.addEventListener('DOMContentLoaded', init);
+        // Start
+        init();
 
     </script>
 </body>
