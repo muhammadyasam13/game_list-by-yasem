@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Support | Ultimate Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-cyan: #00f2ff;
+            --bg-dark: #050b14;
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.05), transparent 50%);
+        }
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+            border-color: var(--neon-cyan);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <a href="index.html" class="absolute top-8 left-8 text-gray-400 hover:text-cyan-400 flex items-center gap-2 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to Vault
+    </a>
+
+    <div class="w-full max-w-lg glass-panel rounded-2xl p-8 shadow-2xl">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-black tracking-tighter text-white">CONTACT <span class="text-cyan-400">COMMAND CENTER</span></h1>
+            <p class="text-gray-400 text-sm mt-2 font-mono uppercase tracking-widest">Send a transmission to Yasem Coopration</p>
+        </div>
+
+        <form action="https://formspree.io/f/xqeyelor" method="POST" class="space-y-6">
+            
+            <div>
+                <label class="block text-xs font-bold text-cyan-400 uppercase tracking-widest mb-2">Return Address (Email)</label>
+                <input type="email" name="email" required 
+                    class="w-full bg-slate-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white outline-none input-glow transition-all"
+                    placeholder="your-email@example.com">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-cyan-400 uppercase tracking-widest mb-2">Transmission Details</label>
+                <textarea name="message" required rows="5"
+                    class="w-full bg-slate-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white outline-none input-glow transition-all resize-none"
+                    placeholder="Write your message here..."></textarea>
+            </div>
+
+            <button type="submit" 
+                class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black py-4 rounded-xl shadow-lg shadow-cyan-500/20 transition-all transform active:scale-95 uppercase tracking-widest">
+                Initiate Send
+            </button>
+        </form>
+    </div>
+
+    <p class="mt-8 text-gray-600 text-[10px] uppercase tracking-widest">Encrypted Tunnel Active</p>
+
+</body>
+</html>
